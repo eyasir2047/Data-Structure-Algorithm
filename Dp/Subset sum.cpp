@@ -2,6 +2,7 @@
 using namespace std;
 
 #define ll long long int
+#define lll long long
 #define fo(i,n) for(ll i=0;i<n;i++)
 #define po(i,n) for(ll i=1;i<=n;i++)
 #define all(x) sort(x.begin(),x.end())
@@ -12,53 +13,52 @@ using namespace std;
 #define tup tuple<int,int,int>
 
 
-const int N=1e5+10;
+const ll N=1e2+10;
+const ll M=1e5+10;
 
-int dp[N];
+
+ll dp[N][M];
+
+int MMMMod=1e9+7;
 
 //top down(recursion + memoisattion)
 
-int lis(int i,vector<int>&a){
-   
-   if(dp[i]!=-1)return dp[i];
 
-    int ans=1;
-    for(int j=0;j<i;j++){
-        if(a[i]>a[j])
-        ans=max(ans,lis(j,a)+1);
-    }
+bool func(ll i,ll sum,vector<ll>&a){
+    if(sum==0)return true;
+    if(i<0)return false;
+    if(dp[i][sum]!=-1)return dp[i][sum];
 
-    return dp[i]=ans;
+    //not taking the element
+    bool isPossible= func(i-1,sum,a);
 
-}//0(N^2)
+
+    //taking the element 
+    if(sum-a[i]>=0)
+    isPossible|= func(i-1,sum-a[i],a);
+
+    return dp[i][sum]=isPossible;
+}
 
 
 
 int main(){
 
     eyasir2047;
-    
+
     memset(dp,-1,sizeof(dp));
+    ll n,sum;
+    cin>>n>>sum;
 
-    int n;cin>>n;
 
-    vector<int>a(n);
+    vector<ll>a(n);
     fo(i,n)cin>>a[i];
 
-    int ans=0;
-
-    fo(i,n){
-        ans=max(ans,lis(i,a));
-    }
-
-    cout<<ans<<endl;
+    cout<<func(n-1,sum,a)<<endl;
 
 
-  
 
-
-    
-
+   
 
     return 0;
 }

@@ -24,25 +24,23 @@ int MMMMod=1e9+7;
 //top down(recursion + memoisattion)
 
 
-ll func(ll index,ll w,vector<ll>&weight,vector<ll>&value){
-  
-    if(w==0)return 0;
-    if(index<0)return 0;
+//this function will return the minimum weight to get the maximum value which is 1e5
+ll func(ll index,ll max_value,vector<ll>&weight,vector<ll>&value){
+        if(max_value==0)return 0;
+        if(index<0)return 1e15;
+        if(dp[index][max_value]!=-1)return dp[index][max_value];
 
-      if(dp[index][w]!=-1)return dp[index][w];
+        ll ans;
 
-    ll ans;
+        ans=func(index-1,max_value,weight,value);
 
-    //don't choose an item 
-    ans=func(index-1,w,weight,value);
+        if(max_value-value[index]>=0)
+        ans=min(ans,func(index-1,max_value-value[index],weight,value)+weight[index]);
 
-    //choose an item 
-    if(w-weight[index]>=0)
-    ans=max(ans,func(index-1,w-weight[index],weight,value)+value[index]);//state --> index and weight
+        
 
-    return dp[index][w]=ans;  
+        return dp[index][max_value]=ans;
 }
-
 
 int main(){
 
@@ -55,15 +53,15 @@ int main(){
     vector<ll>value(n+1);
 
     fo(i,n)cin>>weight[i]>>value[i];
+
+    for(ll i=1e5;i>=0;i--){
+
+        if(func(n-1,i,weight,value)<=w){
+            cout<<i<<endl;
+            break;
+        }
+
+    }
     
-
-    cout<<func(n-1,w,weight,value)<<endl;
-
-
-
-
-
-  
-  
-   return 0;
+    return 0;
 }

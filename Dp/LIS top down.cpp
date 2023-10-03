@@ -11,33 +11,29 @@ using namespace std;
 #define eyasir2047 ios_base::sync_with_stdio(0);cin.tie(NULL);
 #define tup tuple<int,int,int>
 
+int dp[1005][1005];
 
-const int N=1e5+10;
+int func(int n,vector<int>&a,int curr,int prev){
+    if(curr==n)return 0;
+    if(dp[curr][prev+1]!=-1)return dp[curr][prev+1];
+    //prev+1 as prev can be -1
 
-int dp[N];
+    //include
+    int take=0;
+    if(prev==-1 || a[curr]>a[prev]){//increasing
+        take=1 + func(n,a,curr+1,curr);
+}
 
-//top down(recursion + memoisattion)
+    //exclude
+    int notTake=0;
+    notTake=0+func(n,a,curr+1,prev);
 
-int lis(int i,vector<int>&a){
-   
-   if(dp[i]!=-1)return dp[i];
-
-    int ans=1;
-    for(int j=0;j<i;j++){
-        if(a[i]>a[j])
-        ans=max(ans,lis(j,a)+1);
-    }
-
-    return dp[i]=ans;
-
-}//0(N^2)
-
+    return dp[curr][prev+1]=max(take,notTake);
+}
 
 
 int main(){
-
     eyasir2047;
-    
     memset(dp,-1,sizeof(dp));
 
     int n;cin>>n;
@@ -45,20 +41,8 @@ int main(){
     vector<int>a(n);
     fo(i,n)cin>>a[i];
 
-    int ans=0;
-
-    fo(i,n){
-        ans=max(ans,lis(i,a));
-    }
-
-    cout<<ans<<endl;
-
-
-  
-
-
-    
-
+    cout<<func(n,a,0,-1)<<endl;
 
     return 0;
+
 }
